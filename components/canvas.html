@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        // 检查浏览器是否支持canvas
+        function canvasSupport() {
+            return !!document.createElement('canvas').getContext;
+        }
+        function drawImg(context) {
+            const helloWorldImg = new Image()
+            helloWorldImg.onload = function () {
+                context.drawImage(helloWorldImg, 160, 130);
+            }
+            helloWorldImg.src = "./images/helloworld.png"
+        }
+        function drawScreen() {
+            const theCanvas = document.getElementById("canvasOne")
+            const context = theCanvas.getContext("2d")
+            context.fillStyle = "#ffffaa"
+            context.fillRect(0, 0, 500, 500)
+            context.fillStyle = "#000000"
+            context.font = "20px Sans-Serif"
+            context.textBaseline = "top"
+            context.fillText("Hello World!", 195, 80);
+            //边框
+            context.strokeStyle = "#000000";
+            context.strokeRect(5, 5, 490, 290);
+            drawImg(context)
+            theCanvas.toDataURL()
+        }
+        // 主函数
+        function canvasApp() {
+            if (!canvasSupport) {
+                return
+            }
+            drawScreen()
+        }
+        window.onload = function () { canvasApp() }
+    </script>
+</head>
+
+<body>
+    <canvas id="canvasOne" width="500" height="300">
+        Your browser does not support HTML5 Canvas.
+    </canvas>
+</body>
+
+</html>
