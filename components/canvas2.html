@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        var guesses = 0;
+        var message = "Guess The Letter From a (lower)to z (higher)"
+        var letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
+        var today = new Date()
+        var letterToGuess = ""
+        var higherOrLower = ""
+        var lettersGuessed;
+        var gameOver = false
+        function Debugger() { }
+        Debugger.log = function (message) {
+            try {
+                console.log(message);
+            } catch (e) {
+                return
+            }
+
+        }
+
+        function canvasSupport() {
+            return !!document.createElement('canvas').getContext;
+        }
+
+        function drawScreen() {
+            if (!canvasSupport) return
+            /** @type {HTMLCanvasElement} */
+            const theCanvas = document.getElementById('canvasOne')
+            const context = theCanvas.getContext('2d')
+            context.fillStyle = "#ffffaa"
+            context.fillRect(0, 0, 500, 300)
+            context.strokeStyle = "#000000"
+            context.strokeRect(5, 5, 490, 290)
+
+            context.textBaseline = 'top'
+
+            context.fillStyle = "#FF0000"
+            context.font = "14px Sans-Serif"
+            context.fillText(message, 125, 30)
+
+            context.fillStyle = "#109910"
+            context.font = "16px Sans-Serif"
+            context.fillText('Guesses: ' + guesses, 215, 50)
+
+            context.fillStyle = "#000000";
+            context.font = "16px Sans-Serif";
+            context.fillText("Higher Or Lower: " + higherOrLower, 150, 125);
+            //猜过的字母
+            context.fillStyle = "#FF0000";
+            context.font = "16px Sans-Serif";
+            context.fillText("Letters Guessed: " + lettersGuessed.toString(), 10, 260);
+            if (gameOver) {
+                context.fillStyle = "#FF0000";
+                context.font = "40px _ sans-serif";
+                context.fillText("You Got It!", 150, 180);
+            }
+        }
+
+        function eventKeyPressed(e) {
+            if (!gameOver) {
+                console.log(e.keyCode);
+                var letterPressed = String.fromCharCode(e.keyCode)
+                // console.log(letterPressed.charCodeAt());
+                letterPressed = letterPressed.toLocaleLowerCase()
+                guesses++
+                lettersGuessed.push(letterPressed)
+                if (letterPressed == letterToGuess) {
+                    gameOver = true
+                } else {
+                    letterIndex = letters.indexOf(letterToGuess)
+                    guessIndex = letters.indexOf(letterPressed)
+                    Debugger.log(guessIndex);
+                    if (guessIndex < 0) {
+                        higherOrLower = "That is not aa letter";
+                    } else if (guessIndex > letterIndex) {
+                        higherOrLower = "Lower"
+                    } else {
+                        higherOrLower = "Higher"
+
+                    }
+                }
+                drawScreen()
+            }
+        }
+
+        function initGame() {
+            var letterIndex = Math.floor(Math.random() * letters.length)
+            letterToGuess = letters[letterIndex]
+            guesses = 0
+            lettersGuessed = []
+            gameOver = false
+            window.addEventListener('keydown', eventKeyPressed, true);
+        }
+
+        window.onload = function () {
+            initGame()
+        }
+    </script>
+</head>
+
+<body>
+    <canvas id="canvasOne" width="500" height="300">
+        你的浏览器不支持canvas
+    </canvas>
+</body>
+
+</html>
